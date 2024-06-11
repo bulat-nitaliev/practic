@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from general.models import Islam, VredPrivichki, Comment, Cel, User
 from datetime import datetime, date
+from rest_framework.exceptions import PermissionDenied
 
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,7 +24,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
-    
+
 class UserRetrievSerializer(serializers.ModelSerializer):
     cels = serializers.SerializerMethodField()
     class Meta:
@@ -93,16 +94,14 @@ class CelListSerializer(serializers.ModelSerializer):
                 'dt_end')
 
     def get_comment(self, obj):
-        print(self)
         comment = self.context['request'].user.comments.filter(cel=obj)
-        print(*comment)
         return [i.body for i in comment] if comment else ''
 
 class CelUpdateSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
     comment = serializers.SerializerMethodField()
     dt_end = serializers.DateField(initial=date.today,read_only=True)
-    # name = serializers.HiddenField(default=serializers.CharField())
+
     class Meta:
         model = Cel
         fields = ('author',
@@ -113,11 +112,9 @@ class CelUpdateSerializer(serializers.ModelSerializer):
                 )
 
     def get_comment(self, obj):
-        # print(self)
         comment = self.context['request'].user.comments.filter(cel=obj)
-        # print(*comment)
         return [i.body for i in comment] if comment else ''
-    
+
 
 
 class CelCreateSerializer(serializers.ModelSerializer):
@@ -138,3 +135,19 @@ class CommentSerializer(serializers.ModelSerializer):
             'cel',
             'created_at',
         )
+
+    def create(self, validated_data):
+        # print(Cel.objects.filter(author=self.context['request'].user))
+        # print(Comment.objects.all().filter(author=self.context['request'].user).order_by('-id'))
+        cel = [i.name for i in Cel.objects.filter(author=self.context['request'].user)]
+        # print(validated_data['cel'].name, cel)
+
+        if validated_data['cel'].name in cel:
+            comment = Comment.objects.create(
+                body=validated_data['body'],
+                cel=validated_data['cel'],
+                author=self.context['request'].user
+            )
+            comment.save()
+            return comment
+        raise PermissionDenied('permission denied')

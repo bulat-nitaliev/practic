@@ -54,7 +54,7 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name="comments",
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.body

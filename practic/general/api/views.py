@@ -4,7 +4,7 @@ from rest_framework.mixins import (ListModelMixin, CreateModelMixin, UpdateModel
 from general.api.serializers import (IslamSerializers, VredPrivichkiSerializer, UserCreateSerializer, UserRetrievSerializer,
                                      CelCreateSerializer, CelListSerializer, CommentSerializer, CelUpdateSerializer)
 from general.models import Islam, VredPrivichki, Cel, Comment, User
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import c, AllowAny
 from general.permissions import IsOwner
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -18,7 +18,7 @@ class UserVievSet(GenericViewSet, CreateModelMixin):
         if self.action == 'create':
             return UserCreateSerializer
         return UserRetrievSerializer
-    
+
     def get_permissions(self):
         """
         Instantiates and returns the list of permissions that this view requires.
@@ -26,7 +26,7 @@ class UserVievSet(GenericViewSet, CreateModelMixin):
         if self.action == 'create':
             permission_classes = [AllowAny]
         else:
-            permission_classes = [IsAuthenticated]
+            permission_classes = [c]
         return [permission() for permission in permission_classes]
 
 
@@ -70,27 +70,16 @@ class CelViewSet(ModelViewSet):
         user = self.request.user
         res = Cel.objects.all().filter(author_id=user).order_by('-id')
         return res
-    
-    # def update(self, request, *args, **kwargs):
-    #     partial = kwargs.pop('partial', False)
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance, data=request.data, partial=partial)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
 
-    #     if getattr(instance, '_prefetched_objects_cache', None):
-    #         # If 'prefetch_related' has been applied to a queryset, we need to
-    #         # forcibly invalidate the prefetch cache on the instance.
-    #         instance._prefetched_objects_cache = {}
 
-    #     return Response(serializer.data)
 
-    
+
 
 class CommentViewSet(CreateModelMixin, GenericViewSet):
     serializer_class = CommentSerializer
+    # permission_classes = [IsOwner,]
 
     def get_queryset(self):
         user = self.request.user
-        res = Comment.objects.all().filter(author_id=user).order_by('-id')
+        res = Comment.objects.all().filter(author=user).order_by('-id')
         return res
