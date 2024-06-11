@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.response import Response
 from general.models import Islam, VredPrivichki, Comment, Cel, User
-from datetime import datetime
+from datetime import datetime, date
 
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,6 +23,23 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+    
+class UserRetrievSerializer(serializers.ModelSerializer):
+    cels = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'cels',
+        )
+
+    def get_cels(self, obj):
+        cel = self.context['request'].user.cels.filter(author=obj)
+        return [i.name for i in cel] if cel else ''
+
 
 class IslamSerializers(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -67,7 +84,9 @@ class CelListSerializer(serializers.ModelSerializer):
     comment = serializers.SerializerMethodField()
     class Meta:
         model = Cel
-        fields = ('author',
+        fields = (
+                'id',
+                'author',
                 'name',
                 'comment',
                 'dt_beg',
@@ -82,12 +101,15 @@ class CelListSerializer(serializers.ModelSerializer):
 class CelUpdateSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
     comment = serializers.SerializerMethodField()
+    dt_end = serializers.DateField(initial=date.today,read_only=True)
+    # name = serializers.HiddenField(default=serializers.CharField())
     class Meta:
         model = Cel
         fields = ('author',
                 'name',
                 'comment',
                 'dt_beg',
+                'dt_end'
                 )
 
     def get_comment(self, obj):
@@ -95,10 +117,8 @@ class CelUpdateSerializer(serializers.ModelSerializer):
         comment = self.context['request'].user.comments.filter(cel=obj)
         # print(*comment)
         return [i.body for i in comment] if comment else ''
+    
 
-
-
-        return Response(serializer.data)
 
 class CelCreateSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())

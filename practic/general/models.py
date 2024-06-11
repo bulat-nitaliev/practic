@@ -33,7 +33,7 @@ class Cel(models.Model):
     author = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
-        related_name="posts",
+        related_name="cels",
     )
     name = models.CharField(max_length=150)
     dt_beg = models.DateField(auto_now_add=True)
