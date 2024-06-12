@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.response import Response
 from general.models import Islam, VredPrivichki, Comment, Cel, User
 from datetime import datetime, date
 from rest_framework.exceptions import PermissionDenied
@@ -42,11 +41,13 @@ class UserRetrievSerializer(serializers.ModelSerializer):
         return [i.name for i in cel] if cel else ''
 
 
-class IslamSerializers(serializers.ModelSerializer):
+class IslamListSerializers(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Islam
-        fields = ('quran',
+        fields = (
+                "id",
+                'quran',
                 'solat_duha',
                 'solat_vitr',
                 'mechet_fard',
@@ -57,6 +58,44 @@ class IslamSerializers(serializers.ModelSerializer):
                 'rodstven_otn',
                 'user',
                 'created_at')
+
+class IslamCreateSerializers(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = Islam
+        fields = (
+                'quran',
+                'solat_duha',
+                'solat_vitr',
+                'mechet_fard',
+                'tauba',
+                'sadaka',
+                'zikr_ut',
+                'zikr_vech',
+                'rodstven_otn',
+                'user',
+                'created_at')
+
+class IslamRetrieveSerializers(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = Islam
+        fields = (
+                "id",
+                'quran',
+                'solat_duha',
+                'solat_vitr',
+                'mechet_fard',
+                'tauba',
+                'sadaka',
+                'zikr_ut',
+                'zikr_vech',
+                'rodstven_otn',
+                'user',
+                'created_at')
+
+
+
 
 class VredPrivichkiSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -69,16 +108,6 @@ class VredPrivichkiSerializer(serializers.ModelSerializer):
                 'user',
                 'created_at')
 
-# class VredPrivichkiCreateSerializer(serializers.ModelSerializer):
-#     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-#     class Meta:
-#         model = VredPrivichki
-#         fields = ('son',
-#                 'telefon',
-#                 'haram',
-#                 'eda',
-#                 'user',
-#                 'created_at')
 
 class CelListSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -96,6 +125,7 @@ class CelListSerializer(serializers.ModelSerializer):
     def get_comment(self, obj):
         comment = self.context['request'].user.comments.filter(cel=obj)
         return [i.body for i in comment] if comment else ''
+
 
 class CelUpdateSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -150,4 +180,4 @@ class CommentSerializer(serializers.ModelSerializer):
             )
             comment.save()
             return comment
-        raise PermissionDenied('permission denied')
+        raise PermissionDenied('Вы не можете добавить коментарий к чужой цели')

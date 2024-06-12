@@ -1,8 +1,9 @@
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.mixins import (ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin,
                                     RetrieveModelMixin)
-from general.api.serializers import (IslamSerializers, VredPrivichkiSerializer, UserCreateSerializer, UserRetrievSerializer,
-                                     CelCreateSerializer, CelListSerializer, CommentSerializer, CelUpdateSerializer)
+from general.api.serializers import (VredPrivichkiSerializer, UserCreateSerializer, UserRetrievSerializer,
+                                     CelCreateSerializer, CelListSerializer, CommentSerializer, CelUpdateSerializer,
+                                     IslamListSerializers, IslamRetrieveSerializers, IslamCreateSerializers)
 from general.models import Islam, VredPrivichki, Cel, Comment, User
 from rest_framework.permissions import c, AllowAny
 from general.permissions import IsOwner
@@ -39,22 +40,51 @@ class UserVievSet(GenericViewSet, CreateModelMixin):
 
 
 class IslamViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin):
-    serializer_class = IslamSerializers
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return IslamCreateSerializers
+        if self.action == 'retrieve':
+            return IslamRetrieveSerializers
+        return IslamListSerializers
     permission_classes = [IsOwner]
+
+    def retrieve(self, request, *args, **kwargs):
+        # print(request.data, '-----------data')
+        # print(self.request, '---------request.data')
+        # print(args, '-----------------args')
+        # print(kwargs["pk"], '-----------------kwargs')
+        # print( self.request.user, request.user, kwargs["pk"])
+        user = Islam.objects.filter(id=kwargs["pk"]).last()
+        instance = Islam.objects.filter(user=self.request.user, id=kwargs["pk"])
+        # print(user, instance)
+        if not instance or (instance and user not in instance):
+            raise PermissionDenied('Вы неможете посмотреть чужие дела')
+
+
+        serializer = self.get_serializer(instance[0])
+        return Response(serializer.data)
+
     def get_queryset(self):
         user = self.request.user
-        res = Islam.objects.all().filter(user_id=user).order_by('-id')
+        res = Islam.objects.all().filter(user=user).order_by('-id')
         return res
 
 class VredPrivichkiViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin):
     permission_classes = [IsOwner]
     serializer_class = VredPrivichkiSerializer
-    # queryset = VredPrivichki.objects.all().order_by('-id')
     def get_queryset(self):
         user = self.request.user
         res = VredPrivichki.objects.all().filter(user_id=user).order_by('-id')
         return res
 
+    def retrieve(self, request, *args, **kwargs):
+        user = VredPrivichki.objects.filter(id=kwargs["pk"]).last()
+        instance = VredPrivichki.objects.filter(user=self.request.user, id=kwargs["pk"])
+
+        if not instance or (instance and user not in instance):
+            raise PermissionDenied('Вы неможете посмотреть чужие дела')
+        serializer = self.get_serializer(instance[0])
+        return Response(serializer.data)
 
 
 

@@ -1,9 +1,7 @@
 from rest_framework.test import APITestCase
 from general.factories import UserFactory, CelFactory, CommentFactory
 from rest_framework import status
-from general.models import User, Cel, Comment
-from django.contrib.auth.hashers import check_password
-from datetime import datetime, date
+from general.models import  Comment
 
 class CommentTestCase(APITestCase):
     def setUp(self):
@@ -34,3 +32,4 @@ class CommentTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(Comment.objects.all().count(), 0)
+        self.assertEqual(response.data['detail'], 'Вы не можете добавить коментарий к чужой цели')
