@@ -8,6 +8,7 @@ menu = ReplyKeyboardMarkup(
                 ]
             ],
             resize_keyboard=True,
+            input_field_placeholder='Выбирете из меню'
         )
 
 
@@ -16,6 +17,15 @@ Yes_no = ReplyKeyboardMarkup(
                 [
                     KeyboardButton(text="Да"),
                     KeyboardButton(text="Нет"),
+                ]
+            ],
+            resize_keyboard=True,
+        )
+
+cel_create = ReplyKeyboardMarkup(
+            keyboard=[
+                [
+                    KeyboardButton(text="Создать цель")
                 ]
             ],
             resize_keyboard=True,

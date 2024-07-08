@@ -20,7 +20,7 @@ class Islam(models.Model):
 
 class VredPrivichki(models.Model):
     son = models.BooleanField()
-    telefon = models.IntegerField()
+    telefon = models.BooleanField()
     haram = models.BooleanField()
     eda = models.BooleanField()
     created_at = models.DateField(auto_now_add=True)

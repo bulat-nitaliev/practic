@@ -118,17 +118,7 @@ async def start1(message:types.Message, state:FSMContext):
     await state.update_data(rodstven_otn=True)
     data = await state.get_data()
     await state.clear() 
-    data_islam = {
-        "quran": data['quran'],
-        "solat_duha": data['solat_duha'],
-        "solat_vitr": data['solat_vitr'],
-        "mechet_fard": data['mechet_fard'],
-        "tauba": data['tauba'],
-        "sadaka": data['sadaka'],
-        "zikr_ut": data['zikr_ut'],
-        "zikr_vech": data['zikr_vech'],
-        "rodstven_otn": data['rodstven_otn']
-        }
+    
     dt = {
         "username": str(message.from_user.id),
         "password": str(message.from_user.id)
@@ -143,17 +133,7 @@ async def start2(message:types.Message, state:FSMContext):
     await state.update_data(rodstven_otn=False)
     data = await state.get_data()
     await state.clear() 
-    data_islam = {
-        "quran": data['quran'],
-        "solat_duha": data['solat_duha'],
-        "solat_vitr": data['solat_vitr'],
-        "mechet_fard": data['mechet_fard'],
-        "tauba": data['tauba'],
-        "sadaka": data['sadaka'],
-        "zikr_ut": data['zikr_ut'],
-        "zikr_vech": data['zikr_vech'],
-        "rodstven_otn": data['rodstven_otn']
-        }
+    
     dt = {
         "username": str(message.from_user.id),
         "password": str(message.from_user.id)
@@ -168,7 +148,7 @@ async def start2(message:types.Message, state:FSMContext):
 @router.message(F.text=='Ислам')
 async def start(message:types.Message, state:FSMContext):
     await state.set_state(Islam.quran) 
-    await message.answer('As salamu aleykum сколько страниц курана прочитали', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer('Сколько сегодня страниц курана прочитали ответь цифрами', reply_markup=types.ReplyKeyboardRemove())
     
 
 #Start
@@ -182,12 +162,9 @@ async def start(message:types.Message):
         "last_name": message.from_user.first_name
         }
     res = await register(data)
-    # dt = {
-    #     "username": str(message.from_user.id),
-    #     "password": str(message.from_user.id)
-    #     }
-
-    # print(res)
-    # rs = await login(dt)
-    # print(rs)
-    await message.answer('As salamu aleykum' , reply_markup=menu)
+    await message.answer('''
+        Ас саламу алеукум !\n
+    этот бот предназначен для укрепления хороших привычек 
+    Оставления плохих привычек 
+    и достижения своих целей \n
+    выберете из меню ''' , reply_markup=menu)
