@@ -5,7 +5,7 @@ from general.api.serializers import (VredPrivichkiSerializer, UserCreateSerializ
                                      CelCreateSerializer, CelListSerializer, CommentSerializer, CelUpdateSerializer,
                                      IslamListSerializers, IslamRetrieveSerializers, IslamCreateSerializers)
 from general.models import Islam, VredPrivichki, Cel, Comment, User
-from rest_framework.permissions import c, AllowAny
+from rest_framework.permissions import IsAuthenticated,  AllowAny
 from general.permissions import IsOwner
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -27,7 +27,7 @@ class UserVievSet(GenericViewSet, CreateModelMixin):
         if self.action == 'create':
             permission_classes = [AllowAny]
         else:
-            permission_classes = [c]
+            permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
 
@@ -98,7 +98,9 @@ class CelViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+       
         res = Cel.objects.all().filter(author_id=user).order_by('-id')
+        # res = Cel.objects.all().prefetch_related('author__comments').filter(author_id=user).order_by('-id')
         return res
 
 
@@ -112,4 +114,5 @@ class CommentViewSet(CreateModelMixin, GenericViewSet):
     def get_queryset(self):
         user = self.request.user
         res = Comment.objects.all().filter(author=user).order_by('-id')
+        # res = Comment.objects.all().prefetch_related('cel').order_by('-id')
         return res

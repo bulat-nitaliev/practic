@@ -8,7 +8,7 @@ class Islam(models.Model):
     quran = models.IntegerField()
     solat_duha = models.BooleanField()
     solat_vitr = models.BooleanField()
-    mechet_fard = models.IntegerField()
+    mechet_fard = models.BooleanField()
     tauba = models.BooleanField()
     sadaka = models.BooleanField()
     zikr_ut = models.BooleanField()

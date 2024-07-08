@@ -112,6 +112,7 @@ class VredPrivichkiSerializer(serializers.ModelSerializer):
 class CelListSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
     comment = serializers.SerializerMethodField()
+    # comment = serializers.CharField(source='')
     class Meta:
         model = Cel
         fields = (
@@ -123,8 +124,11 @@ class CelListSerializer(serializers.ModelSerializer):
                 'dt_end')
 
     def get_comment(self, obj):
+        # cel = Cel.objects.all().filter(author=self.context['request'].user)
+        # print([i.id for i in cel])
         comment = self.context['request'].user.comments.filter(cel=obj)
         return [i.body for i in comment] if comment else ''
+        # return obj.body
 
 
 class CelUpdateSerializer(serializers.ModelSerializer):
