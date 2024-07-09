@@ -1,4 +1,5 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 menu = ReplyKeyboardMarkup(
             keyboard=[
@@ -25,8 +26,21 @@ Yes_no = ReplyKeyboardMarkup(
 cel_create = ReplyKeyboardMarkup(
             keyboard=[
                 [
-                    KeyboardButton(text="Создать цель")
+                    KeyboardButton(text="Создать цель"),
+                    KeyboardButton(text="Посмотреть список целей"),
                 ]
             ],
             resize_keyboard=True,
         )
+
+inl_cel = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Цель выполнена(удаляем)', callback_data='delete_cel'),
+     InlineKeyboardButton(text='Написать комментарий', callback_data='comment'),]
+])
+
+async def cel_list_inline(res:list)->InlineKeyboardBuilder:
+    builder = InlineKeyboardBuilder()
+    for cel in res["results"]:
+        builder.add(InlineKeyboardButton(text=f'''Ваша цель - "{cel['name']}": 
+                                {cel['comment']}''', callback_data=f'{cel["id"]}'))
+    return builder.adjust(1).as_markup()

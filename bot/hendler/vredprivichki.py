@@ -81,4 +81,5 @@ async def start1(message:types.Message, state:FSMContext):
     print(access_token)
     res = await vredprivichki(data, access_token)
     print(res)
-    await message.answer(f'Спасибо данные собраны {data}', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer('''Ваши данные внесены
+                         Выбирете из меню кнопок''', reply_markup=menu)

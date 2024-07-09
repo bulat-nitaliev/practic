@@ -62,3 +62,13 @@ async def create_comment(data:dict, access_token)->None:
     async with aiohttp.ClientSession() as session:
         async with session.post(url_comment, headers=headers, data=data) as response:
             return await response.json()
+        
+async def destroy_cel(id,access_token)->None:
+    url_vr = f'http://127.0.0.1:8000/api/cel/{id}/'
+    
+    headers={'Authorization': f'Bearer {access_token["access"]}',
+        'accept': 'application/json'
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.delete(url_vr, headers=headers) as response:
+            return  {'result': 'success'}

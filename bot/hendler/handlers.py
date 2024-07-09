@@ -141,7 +141,8 @@ async def start2(message:types.Message, state:FSMContext):
     access_token = await login(dt)
     res = await islam(data, access_token)
     print(res)
-    await message.answer(f'{data}', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer('''Ваши данные внесены
+                         Выбирете из меню кнопок''', reply_markup=menu)
 
 
 #Islam
