@@ -8,6 +8,8 @@ from states.state import Cel, Comment
 cel = Router()
 
 #cb
+
+
 @cel.callback_query(F.data == 'comment')
 async def add_comment(cb:types.CallbackQuery, state:FSMContext):
     id = cb.message.text.split()
