@@ -1,0 +1,62 @@
+version: '3'
+services:
+  db:
+    image: postgres:14.6-alpine
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  bot:
+    build: ./bot
+    
+
+  practic:
+    build: ./practic
+    command: python3 manage.py runserver 0.0.0.0:7000
+    ports:
+      - '7000:7000'
+    volumes:
+      - ./practic:/practic
+    
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+
+   
+  redis:
+    image: redis:7.0.5-alpine
+    hostname: redis
+
+  worker:
+    build:
+      context: ./practic
+    hostname: worker
+    entrypoint: celery
+    command: -A celery_app.app worker --loglevel=info
+    volumes:
+      - ./practic/practic:/practic/practic
+    links:
+      - redis
+    depends_on:
+      - redis
+
+  scheduler:
+    build:
+      context: ./practic
+    hostname: scheduler
+    entrypoint: celery
+    command: -A celery_app.app beat --loglevel=info
+    volumes:
+      - ./practic/practic:/practic/practic
+    links:
+      - redis
+    depends_on:
+      - redis
+      - worker
+      

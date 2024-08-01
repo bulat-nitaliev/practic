@@ -65,8 +65,8 @@ async def start1(message:types.Message, state:FSMContext):
     access_token = await login(dt)
     print(access_token)
     res = await vredprivichki(data, access_token)
-    print(res)
-    await message.answer(f'Спасибо данные собраны {data}', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer('''Ваши данные внесены
+                         Выбирете из меню кнопок''', reply_markup=menu)
 
 @vred.message(Vred.eda , F.text == "Нет")
 async def start1(message:types.Message, state:FSMContext):   
@@ -78,8 +78,8 @@ async def start1(message:types.Message, state:FSMContext):
         "password": str(message.from_user.id)
         }
     access_token = await login(dt)
-    print(access_token)
+    
     res = await vredprivichki(data, access_token)
-    print(res)
+    
     await message.answer('''Ваши данные внесены
                          Выбирете из меню кнопок''', reply_markup=menu)

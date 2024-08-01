@@ -10,8 +10,8 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    'send-spam-every-1-minute': {
+    'send-spam-every-100-minute': {
         'task' : 'general.tasks.send_mail',
-        'schedule': crontab(minute='*/1'),
+        'schedule': crontab(minute='*/100'),
     },
 }

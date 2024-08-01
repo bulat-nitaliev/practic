@@ -1,74 +1,84 @@
-import asyncio, aiohttp
+import aiohttp
+
+class Http:
+    url_http:str = 'http://127.0.0.1:7000'
+
+    async def get(self, url, headers:dict={}):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url=url, headers=headers) as response:
+                return await response.json()
+            
+    async def post(self, url:str, headers:dict, data:dict):
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url=url, headers=headers, data=data) as response:
+                return await response.json()
+            
+    async def delete(self, url:str, headers:dict):    
+        async with aiohttp.ClientSession() as session:
+            async with session.delete(url=url, headers=headers) as response:
+                return  {'result': 'success'}
+            
+http = Http()
+
 
 async def register(data:dict)->None:
-    url = 'http://127.0.0.1:8000/api/users/'
+    url = 'http://127.0.0.1:7000/api/users/'
     async with aiohttp.ClientSession() as session:
         async with session.post(url, data=data) as response:
             return await response.json()
 
 
 async def login(data:dict)->None:
-    url = 'http://127.0.0.1:8000/api/token/'
+    url = 'http://127.0.0.1:7000/api/token/'
     async with aiohttp.ClientSession() as session:
         async with session.post(url, data=data) as response:
             return await response.json()
 
 async def islam(data:dict, access_token)->None:
-    url = 'http://127.0.0.1:8000/api/islam/'
+    url = http.url_http + '/api/islam/'
+    print(url)
     
     headers={'Authorization': f'Bearer {access_token["access"]}',
         'accept': 'application/json'
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, data=data) as response:
-            return await response.json()
+    return await http.post(url=url,headers=headers, data=data)
 
 async def vredprivichki(data:dict, access_token)->None:
-    url_vr = 'http://127.0.0.1:8000/api/vredprivichki/'
+    url_vr = http.url_http + '/api/vredprivichki/'
     
     headers={'Authorization': f'Bearer {access_token["access"]}',
         'accept': 'application/json'
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url_vr, headers=headers, data=data) as response:
-            return await response.json()
+    return await http.post(url_vr, headers, data)
 
 async def cel_list(access_token)->None:
-    url_vr = 'http://127.0.0.1:8000/api/cel/'
+    url_vr = http.url_http + '/api/cel/'
     
     headers={'Authorization': f'Bearer {access_token["access"]}',
         'accept': 'application/json'
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url_vr, headers=headers) as response:
-            return await response.json()
+    return await http.get(url_vr,headers)
 
 async def create_cel(data:dict, access_token)->None:
-    url_cel = 'http://127.0.0.1:8000/api/cel/'
+    url_cel = http.url_http + '/api/cel/'
     
     headers={'Authorization': f'Bearer {access_token["access"]}',
         'accept': 'application/json'
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url_cel, headers=headers, data=data) as response:
-            return await response.json()
+    return await http.post(url_cel, headers, data)
 
 async def create_comment(data:dict, access_token)->None:
-    url_comment = 'http://127.0.0.1:8000/api/comment/'
+    url_comment = http.url_http + '/api/comment/'
     
     headers={'Authorization': f'Bearer {access_token["access"]}',
         'accept': 'application/json'
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url_comment, headers=headers, data=data) as response:
-            return await response.json()
+    return await http.post(url_comment, headers, data)
         
 async def destroy_cel(id,access_token)->None:
-    url_vr = f'http://127.0.0.1:8000/api/cel/{id}/'
+    url = http.url_http + f'/api/cel/{id}/'
     
     headers={'Authorization': f'Bearer {access_token["access"]}',
         'accept': 'application/json'
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.delete(url_vr, headers=headers) as response:
-            return  {'result': 'success'}
+    return await http.delete(url, headers)

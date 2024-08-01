@@ -23,16 +23,5 @@ def send_mail()->None:
     return  response.json()
 
 
-# @app.task
-# async def send_mail():
-#     # bot = Bot(token=config('API_TOKEN'))
-    
-#     for user in User.objects.all():
-#         tg_id = user.username
-#         if tg_id.isdigit():
-            
-#             await bot.send_message(int(tg_id), 'Ас саламу алейкум поработайте над собой - пройдите опрос и обновите цели')
-#             print(tg_id)
-#             print(config('API_TOKEN'))
 
 
