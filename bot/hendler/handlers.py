@@ -164,7 +164,7 @@ async def start(message:types.Message):
         "last_name": message.from_user.first_name
         }
     res = await register(data)
-    print(data)
+    
     # print(res)
     await message.answer('''
         Ас саламу алеукум !\n

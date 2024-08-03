@@ -3,7 +3,7 @@ from keyboard.keyboards import  cel_create, inl_cel, menu
 from fetchs.connect import  login, cel_list, create_cel, create_comment, destroy_cel
 from aiogram.fsm.context import FSMContext
 from states.state import Cel, Comment
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 cel = Router()
@@ -17,7 +17,7 @@ async def add_comment(cb:types.CallbackQuery, state:FSMContext):
     c = cb.message.text.split('"')
     await state.update_data(id=id)
     await state.set_state(Comment.body)
-    print(id, c[1])
+    
     await cb.answer('Напишите комментарий к цели')
     await cb.message.answer(f'Что вы сделали для  достижения - "{c[1]}" напишите ваши действия',
                              reply_markup=types.ReplyKeyboardRemove())
@@ -26,7 +26,7 @@ async def add_comment(cb:types.CallbackQuery, state:FSMContext):
 async def del_cel(cb:types.CallbackQuery):
     await cb.answer('Удаляем цель ')
     id = cb.data.split('_')[-1]
-    print(cb.data, id)
+    
     c = cb.message.text.split('"')
     dt = {
         "username": str(cb.from_user.id),
@@ -34,8 +34,7 @@ async def del_cel(cb:types.CallbackQuery):
         }
     access_token = await login(dt)
     res = await destroy_cel(id,access_token)
-    print(res)
-
+    
     await cb.message.answer(f'Цель - "{c[1]}" успешно удалена', reply_markup=menu)
     
 
