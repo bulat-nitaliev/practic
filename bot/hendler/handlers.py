@@ -165,7 +165,6 @@ async def start(message:types.Message):
         }
     res = await register(data)
     
-    # print(res)
     await message.answer('''
         Ас саламу алеукум !\n
     этот бот предназначен для укрепления хороших привычек 
