@@ -1,7 +1,7 @@
 import aiohttp
 
 class Http:
-    url_http:str = 'http://127.0.0.1:7000'
+    url_http:str = 'http://practic:7000'
 
     async def get(self, url, headers:dict={}):
         async with aiohttp.ClientSession() as session:
@@ -22,14 +22,21 @@ http = Http()
 
 
 async def register(data:dict)->None:
-    url = 'http://127.0.0.1:7000/api/users/'
+    url = 'http://practic:7000/api/users/'
     async with aiohttp.ClientSession() as session:
         async with session.post(url, data=data) as response:
-            return await response.json()
+            # return await response.json()
+            content_type = response.headers.get('Content-Type')
+            if content_type == 'application/json':
+                data = await response.json()
+                print(data)
+            else:
+                html_content = await response.text()
+                # print(html_content)
 
 
 async def login(data:dict)->None:
-    url = 'http://127.0.0.1:7000/api/token/'
+    url = 'http://practic:7000/api/token/'
     async with aiohttp.ClientSession() as session:
         async with session.post(url, data=data) as response:
             return await response.json()

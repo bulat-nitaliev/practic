@@ -18,13 +18,13 @@ async def add_comment(cb:types.CallbackQuery, state:FSMContext):
     await state.update_data(id=id)
     await state.set_state(Comment.body)
     print(id, c[1])
-    await cb.answer('ssssssss')
+    await cb.answer('Напишите комментарий к цели')
     await cb.message.answer(f'Что вы сделали для  достижения - "{c[1]}" напишите ваши действия',
                              reply_markup=types.ReplyKeyboardRemove())
 
 @cel.callback_query(F.data.startswith('delete_cel_'))
 async def del_cel(cb:types.CallbackQuery):
-    await cb.answer('ssssssss')
+    await cb.answer('Удаляем цель ')
     id = cb.data.split('_')[-1]
     print(cb.data, id)
     c = cb.message.text.split('"')

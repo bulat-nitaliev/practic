@@ -8,6 +8,7 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      
 
   bot:
     build: ./bot
@@ -41,6 +42,26 @@ services:
     command: -A celery_app.app worker --loglevel=info
     volumes:
       - ./practic/practic:/practic/practic
+    links:
+      - redis
+    depends_on:
+      - redis
+      - db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  flower:
+    build:
+      context: ./practic
+    hostname: flower
+    entrypoint: celery
+    command: -A celery_app.app flower --loglevel=info
+    volumes:
+      - ./practic/practic:/practic/practic
+    ports:
+      - '5555:5555'
     links:
       - redis
     depends_on:
