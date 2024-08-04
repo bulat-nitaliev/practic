@@ -19,7 +19,7 @@ async def add_comment(cb:types.CallbackQuery, state:FSMContext):
     await state.set_state(Comment.body)
     
     await cb.answer('Напишите комментарий к цели')
-    await cb.message.answer(f'Что вы сделали для  достижения - "{c[1]}" напишите ваши действия',
+    await cb.message.answer(f'Что вы сделали для  достижения - "{c[1]}" напишите ваши действия 📝',
                              reply_markup=types.ReplyKeyboardRemove())
 
 @cel.callback_query(F.data.startswith('delete_cel_'))
@@ -39,15 +39,15 @@ async def del_cel(cb:types.CallbackQuery):
     
 
 #Цели
-@cel.message(F.text=='Цели')
+@cel.message(F.text=='🎯 Цели')
 async def key_cel(message:types.Message):
-    await message.answer('Выбирете из меню кнопок', reply_markup=cel_create)
+    await message.answer('Выберите пункт из меню 👇', reply_markup=cel_create)
 
 
 @cel.message(F.text=='Создать цель')
 async def cr_cel(message:types.Message, state:FSMContext):
     await state.set_state(Cel.cel_state)
-    await message.answer('Создайте цель - напишите  вашу цель', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer('Создайте цель 🎯 - напишите  вашу цель', reply_markup=types.ReplyKeyboardRemove())
 
 
 
@@ -65,12 +65,12 @@ async def start_cel(message:types.Message, state:FSMContext):
             await message.answer(f'''Ваша цель - "{cel['name']}": 
                                 {', '.join(cel['comment'])} ''',
                                 reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Цель выполнена(удаляем)', callback_data=f'''delete_cel_{cel["id"]}'''),
-     InlineKeyboardButton(text='Написать комментарий', callback_data=f'''comment_{cel["id"]}'''),]
+    [InlineKeyboardButton(text='🎯 Цель выполнена(удаляем)', callback_data=f'''delete_cel_{cel["id"]}'''),
+     InlineKeyboardButton(text='Написать комментарий 📝', callback_data=f'''comment_{cel["id"]}'''),]
 ]))  
     else:
         await state.set_state(Cel.cel_state)
-        await message.answer('Создайте цель - напишите  вашу цель', reply_markup=types.ReplyKeyboardRemove())
+        await message.answer('Создайте цель - напишите  вашу цель 🎯 ' , reply_markup=types.ReplyKeyboardRemove())
 
   
 @cel.message(Cel.cel_state)
@@ -83,8 +83,8 @@ async def cel_creat(message:types.Message, state:FSMContext):
         }
     access_token = await login(dt)
     res = await create_cel({'name': name}, access_token)
-    await message.answer(f'''Вы создали цель - {name} 
-    Выбирете из меню кнопок''', reply_markup=cel_create)
+    await message.answer(f'''Вы создали цель 🎯 - {name} 
+    Выбирете из меню кнопок 👇''', reply_markup=cel_create)
 
 
 
@@ -102,7 +102,7 @@ async def comment(message:types.Message, state:FSMContext):
     access_token = await login(dt)
     res = await create_comment({'body': data['body'], 'cel':data['id']}, access_token)
     
-    await message.answer('Выбирете из меню кнопок', reply_markup=cel_create)
+    await message.answer('Ваши данные внесены ✅\nВыберите пункт из меню 👇', reply_markup=cel_create)
 
 
 

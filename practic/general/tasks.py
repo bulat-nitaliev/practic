@@ -11,7 +11,7 @@ def send_mail()->None:
     token = token=config('API_TOKEN')
     api = 'https://api.telegram.org/bot'
     method = api + token + '/sendMessage'
-    text_slice = 'Ас саламу алейкум поработайте над собой - пройдите опрос и обновите цели'
+    text_slice = 'Ас саламу алейкум! 👋 Поработайте над собой - пройдите опрос 📝 и обновите цели 🎯.'
     
     for user in User.objects.all():
         tg_id = user.username
