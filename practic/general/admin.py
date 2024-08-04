@@ -64,6 +64,11 @@ class IslamModelAdmin(admin.ModelAdmin):
     list_filter = (
         "user",
     )
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)
 
 @admin.register(VredPrivichki)
 class VredPrivichkiModelAdmin(admin.ModelAdmin):
@@ -79,6 +84,11 @@ class VredPrivichkiModelAdmin(admin.ModelAdmin):
     list_filter = (
         "user",
     )
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)
 
 @admin.register(Cel)
 class CelModelAdmin(admin.ModelAdmin):
@@ -97,8 +107,15 @@ class CelModelAdmin(admin.ModelAdmin):
     def get_comment_count(self, obj):
         return obj.comments.count()
     
+    # def get_queryset(self, request):
+        
+    #     return super().get_queryset(request).prefetch_related("comments")
+    
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related("comments")
+        qs = super().get_queryset(request).prefetch_related("comments")
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)
     
     get_comment_count.short_description = 'comment_count'
 
@@ -119,5 +136,11 @@ class CommentModelAdmin(admin.ModelAdmin):
         if len(obj.body) > 64:
             return obj.body[:61] + '...'
         return obj.body
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)
     
     get_body.short_description = 'body'

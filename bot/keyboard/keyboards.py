@@ -4,8 +4,8 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 menu = ReplyKeyboardMarkup(
             keyboard=[
                 [
-                    KeyboardButton(text="Ислам"),
-                    KeyboardButton(text="Вредные привычки"),KeyboardButton(text="Цели"),
+                    KeyboardButton(text="🕌 Ислам"),
+                    KeyboardButton(text="🚫 Вредные привычки"),KeyboardButton(text="🎯 Цели"),
                 ]
             ],
             resize_keyboard=True,
@@ -16,8 +16,8 @@ menu = ReplyKeyboardMarkup(
 Yes_no = ReplyKeyboardMarkup(
             keyboard=[
                 [
-                    KeyboardButton(text="Да"),
-                    KeyboardButton(text="Нет"),
+                    KeyboardButton(text="✅ Да"),
+                    KeyboardButton(text="❌ Нет"),
                 ]
             ],
             resize_keyboard=True,
@@ -28,14 +28,18 @@ cel_create = ReplyKeyboardMarkup(
                 [
                     KeyboardButton(text="Создать цель"),
                     KeyboardButton(text="Посмотреть список целей"),
+                ],
+                [
+                    KeyboardButton(text="🕌 Ислам"),
+                    KeyboardButton(text="🚫 Вредные привычки"),KeyboardButton(text="🎯 Цели"),
                 ]
             ],
             resize_keyboard=True,
         )
 
 inl_cel = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Цель выполнена(удаляем)', callback_data='delete_cel'),
-     InlineKeyboardButton(text='Написать комментарий', callback_data='comment'),]
+    [InlineKeyboardButton(text='Цель выполнена(удаляем)', callback_data='delete_cel_'),
+     InlineKeyboardButton(text='Написать комментарий', callback_data='comment_'),]
 ])
 
 async def cel_list_inline(res:list)->InlineKeyboardBuilder:
