@@ -1,7 +1,20 @@
 version: '3'
 services:
+  nginx:
+    build: ./nginx
+    networks: 
+      - net
+    ports:
+      - '80:80'
+    container_name: nginx
+    depends_on:
+      - practic
+
   db:
     image: postgres:14.6-alpine
+    container_name: db
+    networks: 
+      - net
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
@@ -12,16 +25,25 @@ services:
 
   bot:
     build: ./bot
+    container_name: bot
+    networks: 
+      - net
+    restart: unless-stopped
     
 
   practic:
     build: ./practic
-    command: python3 manage.py runserver 0.0.0.0:7000
-    ports:
-      - '7000:7000'
+    command: gunicorn  config.wsgi:application --bind 0.0.0.0:7000
+    restart: unless-stopped
+    env_file:
+      - ./practic/.env
+    networks: 
+      - net
+    container_name: practic
     volumes:
-      - ./practic:/practic
-    
+      - static_vol:/practic/static
+
+     
     environment:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
@@ -33,15 +55,21 @@ services:
   redis:
     image: redis:7.0.5-alpine
     hostname: redis
+    container_name: redis
+    networks: 
+      - net
 
   worker:
     build:
       context: ./practic
+    container_name: worker
     hostname: worker
+    networks: 
+      - net
     entrypoint: celery
     command: -A celery_app.app worker --loglevel=info
     volumes:
-      - ./practic/practic:/practic/practic
+      - worker_vol:/practic/practic
     links:
       - redis
     depends_on:
@@ -56,12 +84,13 @@ services:
     build:
       context: ./practic
     hostname: flower
+    networks: 
+      - net
+    container_name: flower
     entrypoint: celery
     command: -A celery_app.app flower --loglevel=info
     volumes:
-      - ./practic/practic:/practic/practic
-    ports:
-      - '5555:5555'
+      - flower_vol:/practic/practic
     links:
       - redis
     depends_on:
@@ -71,13 +100,25 @@ services:
     build:
       context: ./practic
     hostname: scheduler
+    networks: 
+      - net
     entrypoint: celery
     command: -A celery_app.app beat --loglevel=info
+    container_name: scheduler
     volumes:
-      - ./practic/practic:/practic/practic
+      - scheduler_vol:/practic/practic
     links:
       - redis
     depends_on:
       - redis
       - worker
-      
+
+volumes:
+  static_vol:
+  worker_vol:
+  flower_vol:
+  scheduler_vol:
+
+networks:
+  net:
+    driver: bridge

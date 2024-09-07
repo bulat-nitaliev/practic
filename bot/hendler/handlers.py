@@ -140,6 +140,7 @@ async def start2(message:types.Message, state:FSMContext):
         "password": str(message.from_user.id)
         }
     access_token = await login(dt)
+    print(access_token)
     res = await islam(data, access_token)
     
     await message.answer('''Ваши данные внесены ✅\nВыберите пункт из меню 👇''', reply_markup=menu)
