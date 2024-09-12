@@ -6,9 +6,27 @@ services:
       - net
     ports:
       - '80:80'
+      - "443:443"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    volumes:
+      - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
+      - ./persistentdata/certbot/www:/var/www/certbot # <--here
+      - ./persistentdata/static:/var/www/static # <--here
+      - ./persistentdata/media:/var/www/media # <--here
+
     container_name: nginx
     depends_on:
       - practic
+
+  certbot:
+    image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    volumes:
+      - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
+      - ./persistentdata/certbot/www:/var/www/certbot # <--here
+    networks: 
+      - net
+    container_name: certbot
 
   db:
     image: postgres:14.6-alpine
@@ -16,7 +34,7 @@ services:
     networks: 
       - net
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - ./persistentdata/db:/var/lib/postgresql/data 
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -41,7 +59,9 @@ services:
       - net
     container_name: practic
     volumes:
-      - static_vol:/practic/static
+      - ./persistentdata/static:/var/www/static # <--here
+      - ./persistentdata/media:/var/www/media # <--here
+      - ./supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
 
      
     environment:

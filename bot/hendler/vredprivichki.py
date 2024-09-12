@@ -11,7 +11,7 @@ vred = Router()
 @vred.message(F.text=='🚫 Вредные привычки')
 async def start(message:types.Message, state:FSMContext):
     await state.set_state(Vred.son) 
-    await message.answer('Вовремя вчера легли спать (до 23:00 😴)?', reply_markup=Yes_no)
+    await message.answer('Вовремя вчера легли спать - после Иша намаза 😴?', reply_markup=Yes_no)
 
 #Vred.son
 @vred.message(Vred.son , F.text == "✅ Да")
@@ -31,13 +31,13 @@ async def start1(message:types.Message, state:FSMContext):
 async def start1(message:types.Message, state:FSMContext):   
     await state.update_data(telefon=True)
     await state.set_state(Vred.haram) 
-    await message.answer('Сегодня оберегали свой взгляд , уши , язык , желудок (от харама - запретного 🚫)?', reply_markup=Yes_no)
+    await message.answer('Сегодня оберегали свой взгляд , уши , язык  (от харама - запретного 🚫)?', reply_markup=Yes_no)
 
 @vred.message(Vred.telefon , F.text == "❌ Нет")
 async def start1(message:types.Message, state:FSMContext):   
     await state.update_data(telefon=False)
     await state.set_state(Vred.haram) 
-    await message.answer('Сегодня оберегали свой взгляд , уши, язык, желудок (от харама - запретного 🚫)?', reply_markup=Yes_no)
+    await message.answer('Сегодня оберегали свой взгляд , уши, язык, (от харама - запретного 🚫)?', reply_markup=Yes_no)
 
 #Vred.haram
 @vred.message(Vred.haram , F.text == "✅ Да")

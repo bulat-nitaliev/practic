@@ -157,8 +157,8 @@ async def start(message:types.Message, state:FSMContext):
 @router.message(CommandStart)
 async def start(message:types.Message):
     data = {
-        "username": str(message.from_user.id),
-        "password": str(message.from_user.id),
+        "username": message.from_user.id,
+        "password": message.from_user.id,
         "email": f"user{str(message.from_user.id)}@example.com",
         "first_name": message.from_user.username,
         "last_name": message.from_user.first_name

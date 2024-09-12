@@ -63,6 +63,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 ROOT_URLCONF = 'config.urls'
 AUTH_USER_MODEL = 'general.User'
 
@@ -160,14 +165,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR ,"/static/")
-
-# STATIC_URL = "/static/"
-# STATIC_ROOT = BASE_DIR / "staticfiles" 
-
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR ,"media")
+STATIC_ROOT = '/var/www/static'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/var/www/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

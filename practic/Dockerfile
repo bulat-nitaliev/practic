@@ -10,5 +10,8 @@ RUN pip install -r requirements.txt
 COPY . .     
 
 
+
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
 EXPOSE 7000
 
