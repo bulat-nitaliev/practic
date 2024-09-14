@@ -10,6 +10,7 @@ class Islam(StatesGroup):
     zikr_ut = State()
     zikr_vech = State()
     rodstven_otn = State()
+    fadjr = State()
 
 class Vred(StatesGroup):
     son = State()
