@@ -5,24 +5,25 @@ class User(AbstractUser):
     pass
 
 class Islam(models.Model):
-    quran = models.IntegerField()
-    solat_duha = models.BooleanField()
-    solat_vitr = models.BooleanField()
-    mechet_fard = models.BooleanField()
-    tauba = models.BooleanField()
-    sadaka = models.BooleanField()
-    zikr_ut = models.BooleanField()
-    zikr_vech = models.BooleanField()
-    rodstven_otn = models.BooleanField()
+    quran = models.IntegerField(default=0)
+    solat_duha = models.BooleanField(default=False)
+    solat_vitr = models.BooleanField(default=False)
+    fadjr = models.BooleanField(default=False)
+    mechet_fard = models.BooleanField(default=False)
+    tauba = models.BooleanField(default=False)
+    sadaka = models.BooleanField(default=False)
+    zikr_ut = models.BooleanField(default=False)
+    zikr_vech = models.BooleanField(default=False)
+    rodstven_otn = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="islams")
 
 
 class VredPrivichki(models.Model):
-    son = models.BooleanField()
-    telefon = models.BooleanField()
-    haram = models.BooleanField()
-    eda = models.BooleanField()
+    son = models.BooleanField(default=False)
+    telefon = models.BooleanField(default=False)
+    haram = models.BooleanField(default=False)
+    eda = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="vredprivichkis")
 
