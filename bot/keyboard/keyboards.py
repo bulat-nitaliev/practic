@@ -23,6 +23,16 @@ Yes_no = ReplyKeyboardMarkup(
             resize_keyboard=True,
         )
 
+starts = ReplyKeyboardMarkup(
+            keyboard=[
+                [
+                    KeyboardButton(text="Start"),
+                ]
+            ],
+            resize_keyboard=True,
+            input_field_placeholder='Нажмите кнопку Start'
+        )
+
 cel_create = ReplyKeyboardMarkup(
             keyboard=[
                 [

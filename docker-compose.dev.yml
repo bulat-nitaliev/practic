@@ -1,0 +1,146 @@
+version: '3'
+services:
+  # nginx:
+  #   build: 
+  #     context: ./nginx
+  #     dockerfile: Dockerfile.dev
+  #   networks: 
+  #     - net
+  #   ports:
+  #     - '80:80'
+    #   - "443:443"
+    # command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    # volumes:
+    #   - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
+    #   - ./persistentdata/certbot/www:/var/www/certbot # <--here
+    #   - ./persistentdata/static:/var/www/static # <--here
+    #   - ./persistentdata/media:/var/www/media # <--here
+
+    # container_name: nginx
+    # depends_on:
+    #   - practic
+
+  # certbot:
+  #   image: certbot/certbot
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #   volumes:
+  #     - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
+  #     - ./persistentdata/certbot/www:/var/www/certbot # <--here
+  #   networks: 
+  #     - net
+  #   container_name: certbot
+
+  db:
+    image: postgres:14.6-alpine
+    container_name: db
+    networks: 
+      - net
+    volumes:
+      - ./persistentdata/db:/var/lib/postgresql/data 
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      
+
+  bot:
+    build: ./bot
+    container_name: bot
+    networks: 
+      - net
+    restart: unless-stopped
+    
+
+  practic:
+    build: ./practic
+    command: gunicorn  config.wsgi:application --bind 0.0.0.0:7000
+    restart: unless-stopped
+    env_file:
+      - ./practic/.env
+    networks: 
+      - net
+    container_name: practic
+    volumes:
+      - ./persistentdata/static:/var/www/static # <--here
+      - ./persistentdata/media:/var/www/media # <--here
+      - ./supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+
+     
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+
+   
+  redis:
+    image: redis:7.0.5-alpine
+    hostname: redis
+    container_name: redis
+    networks: 
+      - net
+
+  worker:
+    build:
+      context: ./practic
+    container_name: worker
+    hostname: worker
+    networks: 
+      - net
+    entrypoint: celery
+    command: -A celery_app.app worker --loglevel=info
+    volumes:
+      - worker_vol:/practic/practic
+    links:
+      - redis
+    depends_on:
+      - redis
+      - db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  flower:
+    build:
+      context: ./practic
+    hostname: flower
+    networks: 
+      - net
+    container_name: flower
+    entrypoint: celery
+    command: -A celery_app.app flower --loglevel=info
+    volumes:
+      - flower_vol:/practic/practic
+    links:
+      - redis
+    depends_on:
+      - redis
+
+  scheduler:
+    build:
+      context: ./practic
+    hostname: scheduler
+    networks: 
+      - net
+    entrypoint: celery
+    command: -A celery_app.app beat --loglevel=info
+    container_name: scheduler
+    volumes:
+      - scheduler_vol:/practic/practic
+    links:
+      - redis
+    depends_on:
+      - redis
+      - worker
+
+volumes:
+  static_vol:
+  worker_vol:
+  flower_vol:
+  scheduler_vol:
+
+networks:
+  net:
+    driver: bridge
