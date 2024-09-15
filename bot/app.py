@@ -14,10 +14,7 @@ import pytz     #   pip install pytz
 mos = pytz.timezone('Europe/Moscow')
 moscow_time = datetime.now(mos)
 
-day_15 = datetime(moscow_time.year, moscow_time.month, moscow_time.day, 16,0,0).astimezone(mos)
-day_0 = datetime(moscow_time.year, moscow_time.month, moscow_time.day, 1,0,0).astimezone(mos)
-
-rout = start if day_0 < moscow_time <  day_15 else start2
+rout = start if 0 < moscow_time.hour <  15 else start2
 
 bot = Bot(token=config('API_TOKEN'))
 dp = Dispatcher()
