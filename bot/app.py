@@ -14,7 +14,7 @@ import pytz     #   pip install pytz
 mos = pytz.timezone('Europe/Moscow')
 moscow_time = datetime.now(mos)
 
-rout = start if 0 < moscow_time.hour <  15 else start2
+# rout = start if 0 < moscow_time.hour <  15 else start2
 
 bot = Bot(token=config('API_TOKEN'))
 dp = Dispatcher()
@@ -26,8 +26,8 @@ async def main():
     # await send_message(channel_id, 'Hello')   #dp.start_polling(bot)
     # dp.include_router(cel)
     # dp.include_router(vred)
-    # dp.include_router(router)
-    dp.include_router(rout)
+    dp.include_router(start2)
+    dp.include_router(start)
     
     await dp.start_polling(bot)
 

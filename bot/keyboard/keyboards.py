@@ -26,11 +26,12 @@ Yes_no = ReplyKeyboardMarkup(
 starts = ReplyKeyboardMarkup(
             keyboard=[
                 [
-                    KeyboardButton(text="Start"),
+                    KeyboardButton(text="Утренний опрос"),
+                    KeyboardButton(text="Вечерний опрос"),
                 ]
             ],
             resize_keyboard=True,
-            input_field_placeholder='Нажмите кнопку Start'
+            input_field_placeholder='Выбирите опрос'
         )
 
 cel_create = ReplyKeyboardMarkup(

@@ -6,24 +6,24 @@ class User(AbstractUser):
 
 class Islam(models.Model):
     quran = models.IntegerField(default=0)
-    solat_duha = models.BooleanField(default=False)
-    solat_vitr = models.BooleanField(default=False)
-    fadjr = models.BooleanField(default=False)
-    mechet_fard = models.BooleanField(default=False)
-    tauba = models.BooleanField(default=False)
-    sadaka = models.BooleanField(default=False)
-    zikr_ut = models.BooleanField(default=False)
-    zikr_vech = models.BooleanField(default=False)
-    rodstven_otn = models.BooleanField(default=False)
+    solat_duha = models.BooleanField(default=None, null=True, blank=True)
+    solat_vitr = models.BooleanField(default=None, null=True, blank=True)
+    fadjr = models.BooleanField(default=None, null=True, blank=True)
+    mechet_fard = models.BooleanField(default=None, null=True, blank=True)
+    tauba = models.BooleanField(default=None, null=True, blank=True)
+    sadaka = models.BooleanField(default=None, null=True, blank=True)
+    zikr_ut = models.BooleanField(default=None, null=True, blank=True)
+    zikr_vech = models.BooleanField(default=None, null=True, blank=True)
+    rodstven_otn = models.BooleanField(default=None, null=True, blank=True)
     created_at = models.DateField(auto_now_add=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="islams")
 
 
 class VredPrivichki(models.Model):
-    son = models.BooleanField(default=False)
-    telefon = models.BooleanField(default=False)
-    haram = models.BooleanField(default=False)
-    eda = models.BooleanField(default=False)
+    son = models.BooleanField(default=None, null=True, blank=True)
+    telefon = models.BooleanField(default=None, null=True, blank=True)
+    haram = models.BooleanField(default=None, null=True, blank=True)
+    eda = models.BooleanField(default=None, null=True, blank=True)
     created_at = models.DateField(auto_now_add=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="vredprivichkis")
 

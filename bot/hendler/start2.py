@@ -13,8 +13,8 @@ start2 = Router()
 
 
 #  day
-@start2.message(F.text=='Start')
-async def start_(message:types.Message, state:FSMContext):
+@start2.message(F.text=="Вечерний опрос")
+async def start_22222(message:types.Message, state:FSMContext):
     await state.set_state(All.quran) 
     question = Questions()
     await message.answer(question.quran, reply_markup=types.ReplyKeyboardRemove())
@@ -66,28 +66,28 @@ async def start2_7(message:types.Message, state:FSMContext):
 @start2.message(All.tauba , F.text == "✅ Да")
 async def start1(message:types.Message, state:FSMContext):   
     await state.update_data(tauba=True)
-    await state.set_state(All.zikr_vech) 
+    await state.set_state(All.zikr_ut) 
     question = Questions()
-    await message.answer(question.zikr_vech, reply_markup=Yes_no)
+    await message.answer(question.zikr_ut, reply_markup=Yes_no)
 
 @start2.message(All.tauba , F.text == "❌ Нет")
 async def start2_6(message:types.Message, state:FSMContext):   
     await state.update_data(tauba=False)
-    await state.set_state(All.zikr_vech) 
+    await state.set_state(All.zikr_ut) 
     question = Questions()
-    await message.answer(question.zikr_vech, reply_markup=Yes_no)
+    await message.answer(question.zikr_ut, reply_markup=Yes_no)
 
 
-@start2.message(All.zikr_vech , F.text == "✅ Да")
+@start2.message(All.zikr_ut , F.text == "✅ Да")
 async def start1(message:types.Message, state:FSMContext):   
-    await state.update_data(zikr_vech=True)
+    await state.update_data(zikr_ut=True)
     await state.set_state(All.rodstven_otn) 
     question = Questions()
     await message.answer(question.rodstven_otn, reply_markup=Yes_no)
 
-@start2.message(All.zikr_vech , F.text == "❌ Нет")
+@start2.message(All.zikr_ut , F.text == "❌ Нет")
 async def start2_5(message:types.Message, state:FSMContext):   
-    await state.update_data(zikr_vech=False)
+    await state.update_data(zikr_ut=False)
     await state.set_state(All.rodstven_otn) 
     question = Questions()
     await message.answer(question.rodstven_otn, reply_markup=Yes_no)
@@ -200,23 +200,4 @@ async def start2__0(message:types.Message, state:FSMContext):
     await message.answer('''Ваши данные внесены ✅\nВыберите пункт из меню 👇''', reply_markup=starts)
 
 #Start
-@start2.message(CommandStart)
-async def start_bot(message:types.Message):
-    data = {
-        "username": message.from_user.id,
-        "password": message.from_user.id,
-        "email": f"user{str(message.from_user.id)}@example.com",
-        "first_name": message.from_user.username,
-        "last_name": message.from_user.first_name
-        }
-    res = await register(data)
-    print(res)
-    
-    await message.answer('''
-        Ас саламу алеукум! 👋\n\n
-        Этот бот предназначен для укрепления хороших привычек 🌱,\n
-        оставления вредных привычек 🚫,\n
-        Этот бот будет писать вам в 9:00 и 21:00  по Мск.⏰.\n
-        Необходимо  прожать кнопку "Start" \n
-        ответив на вопросы \n\n
-        👇''' , reply_markup=starts)
+
