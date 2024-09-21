@@ -35,6 +35,7 @@ def send_graf()->None:
     for i in VredPrivichki.objects.filter(user=2):
         l.append([i.son, i.haram, i.telefon, i.eda])
 
+    print(l)
     
     df = pd.DataFrame(l, columns=headers)
     type_val = ['Да', 'Нет'] * 4
@@ -54,7 +55,7 @@ def send_graf()->None:
 	    'Type': type_val
 	}
 
-
+    print(data)
     df = pd.DataFrame(data)
     palette = {'Да': 'green', 'Нет': 'red'}
 
