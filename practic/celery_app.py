@@ -18,4 +18,8 @@ app.conf.beat_schedule = {
         'task' : 'general.tasks.send_mail',
         'schedule': crontab(minute=0, hour=9),
     },
+    'send-spam3': {
+        'task' : 'general.tasks.send_graf',
+        'schedule': crontab(minute=30, hour=15),
+    },
 }
