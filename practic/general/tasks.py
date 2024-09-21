@@ -70,4 +70,5 @@ def send_graf()->None:
                 
         response = requests.post(method, data=data) 
         print(response.json())
+    return  response.json()
 
