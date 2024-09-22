@@ -51,6 +51,7 @@ class IslamModelAdmin(admin.ModelAdmin):
         'quran',
         'solat_duha',
         'solat_vitr',
+        'fadjr',
         'mechet_fard',
         'tauba',
         'sadaka',
