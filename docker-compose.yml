@@ -104,6 +104,8 @@ services:
     build:
       context: ./practic
     hostname: flower
+    ports:
+      -5555:5555
     networks: 
       - net
     container_name: flower

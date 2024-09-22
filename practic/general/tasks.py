@@ -40,6 +40,7 @@ def send_graf()->None:
     for user in User.objects.all():
         tg_id = user.username
         user_pk = user.id
+        print(tg_id, type(tg_id))
         if tg_id.isdigit() and tg_id == '942913569':
 
             for i in vred.filter(user=user_pk):
