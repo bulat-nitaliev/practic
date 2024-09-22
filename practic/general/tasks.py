@@ -40,7 +40,7 @@ def send_graf()->None:
     for user in User.objects.all():
         tg_id = user.username
         user_pk = user.id
-        if tg_id.isdigit():
+        if tg_id.isdigit() and tg_id == '942913569':
 
             for i in vred.filter(user=user_pk):
                 l_vred.append([i.son, i.haram, i.telefon, i.eda])
