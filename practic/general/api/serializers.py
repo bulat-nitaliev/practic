@@ -87,6 +87,7 @@ class IslamRetrieveSerializers(serializers.ModelSerializer):
                 'quran',
                 'solat_duha',
                 'solat_vitr',
+                'fadjr',
                 'mechet_fard',
                 'tauba',
                 'sadaka',
