@@ -40,14 +40,13 @@ def send_graf()->None:
     for user in User.objects.all():
         tg_id = user.username
         user_pk = user.id
-        print(tg_id, type(tg_id))
         if tg_id.isdigit() and tg_id == '942913569':
 
             for i in vred.filter(user=user_pk):
                 l_vred.append([i.son, i.haram, i.telefon, i.eda])
                 
             for i in islam.filter(user=user_pk):
-                dt.append(i.created_at)
+                # dt.append(i.created_at)
                 quran.append(i.quran)
                 l_islam.append([i.solat_vitr,
                                 i.fadjr,
@@ -58,7 +57,7 @@ def send_graf()->None:
                                 i.zikr_vech,
                                 i.rodstven_otn])
 
-            l_q = [i for i in quran if i is not None]
+            l_q = [i for i in quran if i != 0]
             df_v = pd.DataFrame(l_vred, columns=headers_v)
             type_val_v = ['Да', 'Нет'] * 4
             df_i = pd.DataFrame(l_islam, columns=headers_i)
