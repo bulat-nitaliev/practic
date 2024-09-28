@@ -28,7 +28,7 @@ def send_mail()->None:
 
 @app.task
 def send_graf()->None:
-    token = token=config('API_TOKEN')
+    token = config('API_TOKEN')
     api = 'https://api.telegram.org/bot'
     method = api + token + '/sendPhoto'
     vred = VredPrivichki.objects.all()
