@@ -20,6 +20,6 @@ app.conf.beat_schedule = {
     },
     'send-spam3': {
         'task' : 'general.tasks.send_graf',
-        'schedule': crontab(minute=0, hour=10),
+        'schedule': crontab(minute=30, hour=21),
     },
 }
