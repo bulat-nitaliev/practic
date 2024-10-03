@@ -57,6 +57,8 @@ services:
       - ./practic/.env
     networks: 
       - net
+    ports:
+      - 7000:7000
     container_name: practic
     volumes:
       - ./persistentdata/static:/var/www/static # <--here
