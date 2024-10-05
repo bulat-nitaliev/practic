@@ -31,7 +31,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1', 'practic', 'botdjango.ru']
+ALLOWED_HOSTS = ['practic', 'botdjango.ru']
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Application definition
