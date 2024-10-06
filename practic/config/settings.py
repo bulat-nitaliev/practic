@@ -63,10 +63,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 ROOT_URLCONF = 'config.urls'
 AUTH_USER_MODEL = 'general.User'
@@ -234,18 +234,18 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-LOGGING = {
-    'version': 1,
-    'handlers':{
-        'console': {'class': 'logging.StreamHandler'}
-    },
-    'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG'
-        }
-    }
-}
+#LOGGING = {
+#    'version': 1,
+#    'handlers':{
+#        'console': {'class': 'logging.StreamHandler'}
+#    },
+#    'loggers': {
+#        'django.db.backends': {
+#            'handlers': ['console'],
+   #         'level': 'DEBUG'
+  #      }
+ #   }
+#}
 
 REDIS_HOST = 'redis'
 REDIS_PORT = '6379'
