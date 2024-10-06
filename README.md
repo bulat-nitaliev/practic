@@ -31,6 +31,7 @@ cd practic
 ```
 ```
 docker compose build
+
 docker compose up
 ```
 
