@@ -13,7 +13,7 @@ def send_mail()->None:
     token = token=config('API_TOKEN')
     api = 'https://api.telegram.org/bot'
     method = api + token + '/sendMessage'
-    text_slice = 'Ас саламу алейкум! 👋 Поработайте над собой - пройдите опрос 📝 и обновите цели 🎯.'
+    text_slice = 'Ас саламу алейкум! 👋 Поработайте над собой - пройдите опрос 📝 '
     
     for user in User.objects.all():
         tg_id = user.username
@@ -21,7 +21,7 @@ def send_mail()->None:
             data = {'chat_id': tg_id, 'text': text_slice}
             
             response = requests.post(method, data=data) 
-            print(response.json())
+            
     return  response.json()
 
 
@@ -31,21 +31,22 @@ def send_graf()->None:
     token = config('API_TOKEN')
     api = 'https://api.telegram.org/bot'
     method = api + token + '/sendPhoto'
-    vred = VredPrivichki.objects.all()
-    islam = Islam.objects.all()
     headers_v = ['son','haram', 'telefon', 'eda']
     headers_i =  ['solat_vitr', 'fadjr', 'mechet_fard', 'tauba', 'sadaka', 'zikr_ut', 'zikr_vech', 'rodstven_otn']
-    l_vred, l_islam, quran, dt = [], [], [], []
+
 
     for user in User.objects.all():
+        l_vred, l_islam, quran, dt = [], [], [], []
         tg_id = user.username
         user_pk = user.id
-        if tg_id.isdigit() and tg_id == '942913569':
-
-            for i in vred.filter(user=user_pk):
+        if tg_id.isdigit():
+            vred = VredPrivichki.objects.filter(user=user_pk)[-7:]
+            islam = Islam.objects.filter(user=user_pk)[-7:]
+            for i in vred:
                 l_vred.append([i.son, i.haram, i.telefon, i.eda])
                 
-            for i in islam.filter(user=user_pk):
+            quran = [i.quran for i in Islam.objects.filter(user=user_pk)]
+            for i in islam:
                 # dt.append(i.created_at)
                 quran.append(i.quran)
                 l_islam.append([i.solat_vitr,
@@ -57,11 +58,11 @@ def send_graf()->None:
                                 i.zikr_vech,
                                 i.rodstven_otn])
 
-            l_q = [i for i in quran if i != 0]
+            l_q = [i for i in quran if i != 0][-7:]
             df_v = pd.DataFrame(l_vred, columns=headers_v)
             type_val_v = ['Да', 'Нет'] * 4
             df_i = pd.DataFrame(l_islam, columns=headers_i)
-            print(df_i)
+            
             type_val_i = ['Да', 'Нет'] * 4
 
             l_val_v, l_val_i = [], []
@@ -121,8 +122,8 @@ def send_graf()->None:
             # plt.show()
             plt.savefig('ислам2.jpg')
             plt.close()
-
-            plt.plot(dt,l_q, '-bo')
+            print(l_q, tg_id)
+            plt.plot(l_q, '-bo')
             plt.grid(True)
             plt.title('Чтение корана')
             plt.savefig('quran.jpg')
