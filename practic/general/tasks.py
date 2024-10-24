@@ -1,5 +1,4 @@
 from celery_app import app
-import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import mplcyberpunk
@@ -35,21 +34,21 @@ def send_graf()->None:
     headers_i =  ['solat_vitr', 'fadjr', 'mechet_fard', 'tauba', 'sadaka', 'zikr_ut', 'zikr_vech', 'rodstven_otn']
 
 
-    for user in User.objects.filter(username='942913569'):
+    for user in User.objects.all():
         l_vred, l_islam, quran = [], [], []
         tg_id = user.username
         user_pk = user.id
         vred_all = VredPrivichki.objects.all()
-        islam_all = Islam.objects.filter(user=user_pk)[-7:]
+        islam_all = Islam.objects.all()
         if tg_id.isdigit():
-            vred = vred_all.filter(user=user_pk)[-7:]
-            islam = islam_all.filter(user=user_pk)[-7:]
+            vred =[i for i in vred_all.filter(user=user_pk)][-7:]
+            islam =[i for i in  islam_all.filter(user=user_pk)][-7:]
             for i in vred:
                 l_vred.append([i.son, i.haram, i.telefon, i.eda])
                 
             quran = [i.quran for i in Islam.objects.filter(user=user_pk)]
             for i in islam:
-                quran.append(i.quran)
+                
                 l_islam.append([i.solat_vitr,
                                 i.fadjr,
                                 i.mechet_fard,
@@ -74,8 +73,8 @@ def send_graf()->None:
                 # l_val_v.append(false)
 
             for i in headers_i:
-                true_i.append(df_v[i].to_list().count(True))
-                false_i.append(df_v[i].to_list().count(False))
+                true_i.append(df_i[i].to_list().count(True))
+                false_i.append(df_i[i].to_list().count(False))
                 # l_val_i.append(true)
                 # l_val_i.append(false)
 
@@ -85,14 +84,14 @@ def send_graf()->None:
 
             data_v = {
                 'Вредные привычки': headers_v,
-                'yes': true_v,
-                'no': false_v
+                'Да': true_v,
+                'Нет': false_v
             }
 
             data_i= {
                 'Ислам': headers_i,
-                'yes': true_i,
-                'no': false_i
+                'Да': true_i,
+                'Нет': false_i
             }
             # data_i_2= {
             #     'Ислам': header_i2,
