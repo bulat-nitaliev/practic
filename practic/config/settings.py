@@ -9,29 +9,36 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=7vtr2&l_*e3+gcew!ld^a*v3kqhw0fwpeb2_^&i9a%c=$g7$^'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['practic', 'botdjango.ru']
 
-
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Application definition
 
 INSTALLED_APPS = [
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,11 +49,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'rest_framework_simplejwt',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -54,8 +63,31 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 ROOT_URLCONF = 'config.urls'
 AUTH_USER_MODEL = 'general.User'
+
+CORS_ALLOWED_ORIGINS = [ 'http://botdjango.ru', "http://practic:7000"] # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS  = ['http://botdjango.ru', "http://127.0.0.1:8080", 'http://practic:7000']
+
+CORS_ALLOW_HEADERS = [
+'accept',
+'accept-encoding',
+'authorization',
+'content-type',
+'dnt',
+'origin',
+'user-agent',
+'x-csrftoken',
+'x-requested-with',
+
+]
+
 
 TEMPLATES = [
     {
@@ -73,19 +105,30 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -111,7 +154,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -121,7 +164,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
+STATIC_ROOT = '/var/www/static'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/var/www/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -188,15 +234,24 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-# LOGGING = {
-#     'version': 1,
-#     'handlers':{
-#         'console': {'class': 'logging.StreamHandler'}
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG'
-#         }
-#     }
-# }
+#LOGGING = {
+#    'version': 1,
+#    'handlers':{
+#        'console': {'class': 'logging.StreamHandler'}
+#    },
+#    'loggers': {
+#        'django.db.backends': {
+#            'handlers': ['console'],
+   #         'level': 'DEBUG'
+  #      }
+ #   }
+#}
+
+REDIS_HOST = 'redis'
+REDIS_PORT = '6379'
+CELERY_BROKER_URL = 'redis://'+REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://'+REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

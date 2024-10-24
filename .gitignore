@@ -1,3 +1,6 @@
 venv/
 __pycache__/
 .vscode/
+.env
+persistentdata/
+ssl-dhparams.pem.1

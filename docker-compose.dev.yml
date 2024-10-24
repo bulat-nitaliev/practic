@@ -1,32 +1,34 @@
 version: '3'
 services:
-  nginx:
-    build: ./nginx
-    networks: 
-      - net
-    ports:
-      - 80:80
-      - "443:443"
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-    volumes:
-      - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
-      - ./persistentdata/certbot/www:/var/www/certbot # <--here
-      - ./persistentdata/static:/var/www/static # <--here
-      - ./persistentdata/media:/var/www/media # <--here
+  # nginx:
+  #   build: 
+  #     context: ./nginx
+  #     dockerfile: Dockerfile.dev
+  #   networks: 
+  #     - net
+  #   ports:
+  #     - '80:80'
+    #   - "443:443"
+    # command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    # volumes:
+    #   - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
+    #   - ./persistentdata/certbot/www:/var/www/certbot # <--here
+    #   - ./persistentdata/static:/var/www/static # <--here
+    #   - ./persistentdata/media:/var/www/media # <--here
 
-    container_name: nginx
-    depends_on:
-      - practic
+    # container_name: nginx
+    # depends_on:
+    #   - practic
 
-  certbot:
-    image: certbot/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    volumes:
-      - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
-      - ./persistentdata/certbot/www:/var/www/certbot # <--here
-    networks: 
-      - net
-    container_name: certbot
+  # certbot:
+  #   image: certbot/certbot
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #   volumes:
+  #     - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
+  #     - ./persistentdata/certbot/www:/var/www/certbot # <--here
+  #   networks: 
+  #     - net
+  #   container_name: certbot
 
   db:
     image: postgres:14.6-alpine
@@ -57,8 +59,6 @@ services:
       - ./practic/.env
     networks: 
       - net
-    ports:
-      - 7000:7000
     container_name: practic
     volumes:
       - ./persistentdata/static:/var/www/static # <--here
@@ -106,8 +106,6 @@ services:
     build:
       context: ./practic
     hostname: flower
-    ports:
-      - 5555:5555
     networks: 
       - net
     container_name: flower
