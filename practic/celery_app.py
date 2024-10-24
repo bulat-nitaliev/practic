@@ -14,12 +14,12 @@ app.conf.beat_schedule = {
         'task' : 'general.tasks.send_mail',
         'schedule': crontab(minute=0, hour=21),
     },
-    'send-spam1': {
-        'task' : 'general.tasks.send_mail',
-        'schedule': crontab(minute=55, hour=20),
-    },
+    # 'send-spam1': {
+    #     'task' : 'general.tasks.send_mail',
+    #     'schedule': crontab(minute=55, hour=20),
+    # },
     'send-spam3': {
         'task' : 'general.tasks.send_graf',
-        'schedule': crontab(minute=25, hour=18, day_of_week='sun'),
+        'schedule': crontab(minute=5, hour=22), #, day_of_week='sun'
     },
 }
