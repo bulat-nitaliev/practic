@@ -45,13 +45,15 @@ def send_graf()->None:
         user_pk = user.id
         vred_all = VredPrivichki.objects.all()
         islam_all = Islam.objects.all()
-        if tg_id.isdigit():
+        if tg_id.isdigit() and tg_id == '942913569':
             vred =[i for i in vred_all.filter(user=user_pk, created_at__gt=filter_date)]
             islam =[i for i in  islam_all.filter(user=user_pk, created_at__gt=filter_date)]
+            print('vred ------------- ', vred, 'islam --------- ',islam)
             for i in vred:
                 l_vred.append([i.son, i.haram, i.telefon, i.eda])
                 
             quran = [i.quran for i in Islam.objects.filter(user=user_pk, created_at__gt=filter_date)]
+            print(' quran ---------- ' quran)
             for i in islam:
                 
                 l_islam.append([i.solat_vitr,
