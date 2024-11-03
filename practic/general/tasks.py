@@ -36,8 +36,6 @@ def send_graf()->None:
 
     filter_date = datetime.now() - timedelta(days=7)
 
-# Выполняем запрос  
-
 
     for user in User.objects.all():
         l_vred, l_islam, quran = [], [], []
@@ -45,15 +43,13 @@ def send_graf()->None:
         user_pk = user.id
         vred_all = VredPrivichki.objects.all()
         islam_all = Islam.objects.all()
-        if tg_id.isdigit() and tg_id == '942913569':
+        if tg_id.isdigit() :
             vred =[i for i in vred_all.filter(user=user_pk, created_at__gt=filter_date)]
             islam =[i for i in  islam_all.filter(user=user_pk, created_at__gt=filter_date)]
-            print('vred ------------- ', vred, 'islam --------- ',islam)
             for i in vred:
                 l_vred.append([i.son, i.haram, i.telefon, i.eda])
                 
             quran = [i.quran for i in Islam.objects.filter(user=user_pk, created_at__gt=filter_date)]
-            print(' quran ---------- ' quran)
             for i in islam:
                 
                 l_islam.append([i.solat_vitr,
@@ -82,13 +78,7 @@ def send_graf()->None:
             for i in headers_i:
                 true_i.append(df_i[i].to_list().count(True))
                 false_i.append(df_i[i].to_list().count(False))
-                # l_val_i.append(true)
-                # l_val_i.append(false)
-
-            # header_v = [y for i in list(zip(headers_v,headers_v)) for y in i]
-            # header_i1 = [y for i in list(zip(headers_i[:4],headers_i[:4])) for y in i]
-            # header_i2 = [y for i in list(zip(headers_i[4:],headers_i[4:])) for y in i]
-
+               
             data_v = {
                 'Вредные привычки': headers_v,
                 'Да': true_v,
@@ -100,19 +90,10 @@ def send_graf()->None:
                 'Да': true_i,
                 'Нет': false_i
             }
-            # data_i_2= {
-            #     'Ислам': header_i2,
-            #     'Значения': l_val_i[8:],
-            #     'Type': type_val_i
-            # }
 
             df_vr = pd.DataFrame(data_v)
             df_is1 = pd.DataFrame(data_i)
-            # df_is2 = pd.DataFrame(data_i_2)
-            # palette = {'Да': 'green', 'Нет': 'red'}
 
-            # Построение сгруппированной столбчатой диаграммы
-            # sns.barplot(x='Вредные привычки', y='Значения', hue='Type', data=df_vr, palette=palette)
             plt.title('Оставление вредных привычек')
             with plt.style.context('cyberpunk'):
                 df_vr.plot(x='Вредные привычки', kind='bar', stacked=False, alpha=0.8, color=['lime', 'tomato'])
@@ -128,14 +109,6 @@ def send_graf()->None:
             plt.savefig('ислам.jpg')
             plt.close()
 
-            # sns.barplot(x='Ислам', y='Значения', hue='Type', data=df_is2, palette=palette)
-            # plt.title('Побуждение к благочестию')
-            # # plt.show()
-            # plt.savefig('ислам2.jpg')
-            # plt.close()
-            # print(l_q, tg_id)
-            # plt.plot(l_q, '-bo')
-            # plt.grid(True)
             plt.title('Чтение корана')
             df_q = pd.DataFrame(l_q)
             # plt.plot(,'-bo')
@@ -160,6 +133,5 @@ def send_graf()->None:
                         
                 response = requests.post(method, data=data, files=file_v) 
                 response_i = requests.post(method, data=data, files=file_i) 
-                # response_i2 = requests.post(method, data=data, files=file_i2) 
                 response_q = requests.post(method, data=data, files=file_q)
 
