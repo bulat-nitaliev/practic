@@ -46,11 +46,15 @@ services:
     container_name: bot
     networks: 
       - net
+    environment:
+      - URL=https://botdjango.ru
     restart: unless-stopped
     
 
   practic:
-    build: ./practic
+    build: 
+      context: ./practic
+      dockerfile: Dockerfile
     command: gunicorn  config.wsgi:application --bind 0.0.0.0:7000
     restart: unless-stopped
     env_file:

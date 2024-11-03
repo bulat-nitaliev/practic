@@ -1,34 +1,5 @@
 version: '3'
 services:
-  # nginx:
-  #   build: 
-  #     context: ./nginx
-  #     dockerfile: Dockerfile.dev
-  #   networks: 
-  #     - net
-  #   ports:
-  #     - '80:80'
-    #   - "443:443"
-    # command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-    # volumes:
-    #   - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
-    #   - ./persistentdata/certbot/www:/var/www/certbot # <--here
-    #   - ./persistentdata/static:/var/www/static # <--here
-    #   - ./persistentdata/media:/var/www/media # <--here
-
-    # container_name: nginx
-    # depends_on:
-    #   - practic
-
-  # certbot:
-  #   image: certbot/certbot
-  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-  #   volumes:
-  #     - ./persistentdata/certbot/conf:/etc/letsencrypt # <--here
-  #     - ./persistentdata/certbot/www:/var/www/certbot # <--here
-  #   networks: 
-  #     - net
-  #   container_name: certbot
 
   db:
     image: postgres:14.6-alpine
@@ -48,23 +19,24 @@ services:
     container_name: bot
     networks: 
       - net
+    environment:
+      - URL=http://practic:7000
     restart: unless-stopped
     
 
   practic:
-    build: ./practic
-    command: gunicorn  config.wsgi:application --bind 0.0.0.0:7000
+    build: 
+      context: ./practic
+      dockerfile: Dockerfile.dev
+      
+    command: python manage.py runserver 0.0.0.0:7000 #--settings='config.settings.dev'
     restart: unless-stopped
     env_file:
       - ./practic/.env
     networks: 
       - net
     container_name: practic
-    volumes:
-      - ./persistentdata/static:/var/www/static # <--here
-      - ./persistentdata/media:/var/www/media # <--here
-      - ./supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
-
+    
      
     environment:
       - POSTGRES_NAME=postgres
@@ -84,6 +56,7 @@ services:
   worker:
     build:
       context: ./practic
+      dockerfile: Dockerfile.dev
     container_name: worker
     hostname: worker
     networks: 
@@ -105,6 +78,7 @@ services:
   flower:
     build:
       context: ./practic
+      dockerfile: Dockerfile.dev
     hostname: flower
     networks: 
       - net
@@ -121,6 +95,7 @@ services:
   scheduler:
     build:
       context: ./practic
+      dockerfile: Dockerfile.dev
     hostname: scheduler
     networks: 
       - net

@@ -1,7 +1,9 @@
 import aiohttp
+import os
+
 
 class Http:
-    url_http:str = 'https://botdjango.ru'
+    url_http:str = os.environ.get('URL')
 
     async def get(self, url, headers:dict={}):
         async with aiohttp.ClientSession() as session:
@@ -22,7 +24,7 @@ http = Http()
 
 
 async def register(data:dict)->None:
-    url = 'https://botdjango.ru/api/users/'
+    url = http.url_http + '/api/users/'
     async with aiohttp.ClientSession() as session:
         async with session.post(url, data=data) as response:
             # return await response.json()
@@ -36,7 +38,8 @@ async def register(data:dict)->None:
 
 
 async def login(data:dict)->None:
-    url = 'https://botdjango.ru/api/token/'
+    
+    url = http.url_http + '/api/token/'
     async with aiohttp.ClientSession() as session:
         async with session.post(url, data=data) as response:
             return await response.json()

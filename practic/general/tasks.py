@@ -5,6 +5,7 @@ import mplcyberpunk
 from decouple import config
 from general.models import User, VredPrivichki, Islam
 import  requests
+from datetime import date, datetime, timedelta
 
 
 @app.task
@@ -33,6 +34,10 @@ def send_graf()->None:
     headers_v = ['son','haram', 'telefon', 'eda']
     headers_i =  ['solat_vitr', 'fadjr', 'mechet_fard', 'tauba', 'sadaka', 'zikr_ut', 'zikr_vech', 'rodstven_otn']
 
+    filter_date = datetime.now() - timedelta(days=7)
+
+# Выполняем запрос  
+
 
     for user in User.objects.all():
         l_vred, l_islam, quran = [], [], []
@@ -41,12 +46,12 @@ def send_graf()->None:
         vred_all = VredPrivichki.objects.all()
         islam_all = Islam.objects.all()
         if tg_id.isdigit():
-            vred =[i for i in vred_all.filter(user=user_pk)][-7:]
-            islam =[i for i in  islam_all.filter(user=user_pk)][-7:]
+            vred =[i for i in vred_all.filter(user=user_pk, created_at__gt=filter_date)]
+            islam =[i for i in  islam_all.filter(user=user_pk, created_at__gt=filter_date)]
             for i in vred:
                 l_vred.append([i.son, i.haram, i.telefon, i.eda])
                 
-            quran = [i.quran for i in Islam.objects.filter(user=user_pk)]
+            quran = [i.quran for i in Islam.objects.filter(user=user_pk, created_at__gt=filter_date)]
             for i in islam:
                 
                 l_islam.append([i.solat_vitr,
@@ -58,7 +63,7 @@ def send_graf()->None:
                                 i.zikr_vech,
                                 i.rodstven_otn])
 
-            l_q = [i for i in quran if i != 0][-7:]
+            l_q = [i for i in quran if i != 0]
             df_v = pd.DataFrame(l_vred, columns=headers_v)
             # type_val_v = ['Да', 'Нет'] * 4
             df_i = pd.DataFrame(l_islam, columns=headers_i)
