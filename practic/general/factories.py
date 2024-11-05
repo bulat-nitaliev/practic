@@ -20,7 +20,8 @@ class IslamFactory(DjangoModelFactory):
     quran = factory.Faker('pyint', min_value=0, max_value=1000)
     solat_duha = factory.Faker('pybool')
     solat_vitr = factory.Faker('pybool')
-    mechet_fard = factory.Faker('pyint', min_value=0, max_value=5)
+    fadjr = factory.Faker('pybool')
+    mechet_fard = factory.Faker('pybool')
     tauba = factory.Faker('pybool')
     sadaka = factory.Faker('pybool')
     zikr_ut = factory.Faker('pybool')
@@ -29,12 +30,14 @@ class IslamFactory(DjangoModelFactory):
     created_at = factory.Faker('date_object')
     user = factory.SubFactory(UserFactory)
 
+    
+
 class VredPrivichkiFactory(DjangoModelFactory):
     class Meta:
         model = VredPrivichki
 
     son = factory.Faker('pybool')
-    telefon = factory.Faker('pyint', min_value=0, max_value=1000)
+    telefon = factory.Faker('pybool')
     haram = factory.Faker('pybool')
     eda = factory.Faker('pybool')
     created_at = factory.Faker('date_object')

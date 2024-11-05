@@ -89,6 +89,7 @@ class VredPrivichkiViewSet(GenericViewSet, CreateModelMixin, ListModelMixin, Ret
 
 
 class CelViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated,]
     def get_serializer_class(self):
         if self.action == 'create':
             return CelCreateSerializer

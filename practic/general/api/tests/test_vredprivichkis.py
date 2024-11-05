@@ -39,7 +39,7 @@ class VredprivichkiTestCase(APITestCase):
     def test_post_vredprivichki(self):
         data = {
             "son": True,
-            "telefon": 10,
+            "telefon": True,
             "haram": False,
             "eda": True
             }
@@ -56,7 +56,7 @@ class VredprivichkiTestCase(APITestCase):
         self.client.logout()
         data = {
             "son": True,
-            "telefon": 10,
+            "telefon": False,
             "haram": False,
             "eda": True
             }
@@ -67,7 +67,7 @@ class VredprivichkiTestCase(APITestCase):
     def test_post_vredprivichki_from_user(self):
         data = {
             "son": True,
-            "telefon": 10,
+            "telefon": False,
             "haram": False,
             "eda": True
             }
