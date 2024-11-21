@@ -16,9 +16,9 @@ jobs:
     - uses: actions/checkout@v4
     - name: Создание файла .env  
       run:  
-        echo "API_TOKEN=test" >> practic/practic/.env  
-        echo "CHANNEL_ID=user" >> practic/practic/.env 
-        echo "SECRET_KEY=password" >> practic/practic/.env 
+        echo "API_TOKEN=test" >> practic/.env  
+        echo "CHANNEL_ID=user" >> practic/.env 
+        echo "SECRET_KEY=password" >> practic/.env 
     - name: Build the images and start the containers
       run: |
         export GITHUB_WORKFLOW=True
