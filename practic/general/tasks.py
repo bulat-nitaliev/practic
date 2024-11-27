@@ -8,6 +8,13 @@ import  requests
 from datetime import date, datetime, timedelta
 
 
+def photo_send(file_name, method, tg_id):  
+    with open(file_name, 'rb') as photo:
+        file = {'photo': photo}
+        data = {'chat_id': tg_id}
+                
+        requests.post(method, data=data, files=file) 
+
 @app.task
 def send_mail()->None:
     token = token=config('API_TOKEN')
@@ -63,17 +70,14 @@ def send_graf()->None:
 
             l_q = [i for i in quran if i != 0]
             df_v = pd.DataFrame(l_vred, columns=headers_v)
-            # type_val_v = ['Да', 'Нет'] * 4
             df_i = pd.DataFrame(l_islam, columns=headers_i)
             
-            # type_val_i = ['Да', 'Нет'] * 4
 
             true_v, false_v, true_i, false_i = [], [], [], []
             for i in headers_v:
                 true_v.append(df_v[i].to_list().count(True))
                 false_v.append(df_v[i].to_list().count(False))
-                # l_val_v.append(true)
-                # l_val_v.append(false)
+              
 
             for i in headers_i:
                 true_i.append(df_i[i].to_list().count(True))
@@ -92,46 +96,53 @@ def send_graf()->None:
             }
 
             df_vr = pd.DataFrame(data_v)
-            df_is1 = pd.DataFrame(data_i)
-
             plt.title('Оставление вредных привычек')
             with plt.style.context('cyberpunk'):
                 df_vr.plot(x='Вредные привычки', kind='bar', stacked=False, alpha=0.8, color=['lime', 'tomato'])
             # plt.show()
             plt.savefig('вредные_привычки_.jpg')
             plt.close()
+            photo_send('вредные_привычки_.jpg', method, tg_id)
 
-            # sns.barplot(x='Ислам', y='Значения', hue='Type', data=df_is1, palette=palette)
+            df_is1 = pd.DataFrame(data_i)
             plt.title('Побуждение к благочестию')
             with plt.style.context('cyberpunk'):
                 df_is1.plot(x='Ислам', kind='bar', stacked=False, alpha=0.8, color=['lime', 'tomato'])
             # plt.show()
             plt.savefig('ислам.jpg')
             plt.close()
+            photo_send('ислам.jpg', method, tg_id)
+            
 
             plt.title('Чтение корана')
-            df_q = pd.DataFrame(l_q)
-            # plt.plot(,'-bo')
-            with plt.style.context('cyberpunk'):
-                df_q.plot( kind='line',
-                        lw=3, marker='.', ms=20,
-                        figsize=(10,10))
-
-                
+            if l_q:
+                df_q = pd.DataFrame(l_q)
+                with plt.style.context('cyberpunk'):
+                    df_q.plot( kind='line',
+                            lw=3, marker='.', ms=20,
+                            figsize=(10,10))
                 mplcyberpunk.add_gradient_fill(alpha_gradientglow=0.4)
-            plt.savefig('quran.jpg')
-            plt.close()
-            
-            with open('вредные_привычки_.jpg', 'rb') as photo, open('ислам.jpg', 
-                                                                    'rb') as photo_i,  open('quran.jpg', 'rb') as photo_q:
-                file_v = {'photo': photo}
-                file_i = {'photo': photo_i}
-                # file_i2 = {'photo': photo_i2}open('ислам2.jpg', 
-                                                                                        # 'rb') as photo_i2,
-                file_q = {'photo': photo_q}
-                data = {'chat_id': tg_id}
-                        
-                response = requests.post(method, data=data, files=file_v) 
-                response_i = requests.post(method, data=data, files=file_i) 
-                response_q = requests.post(method, data=data, files=file_q)
+                plt.savefig('quran.jpg')
+                plt.close()
+                photo_send('quran.jpg', method, tg_id)
+            else:
+                data = {'chat_id': tg_id, 'text': 'Ас саламу алейкум! 👋 Поработайте над собой - почитайте коран'}            
+                requests.post(api + token + '/sendMessage', data=data) 
+                
 
+                    
+                    
+        
+
+            # with open('вредные_привычки_.jpg', 'rb') as photo, open('ислам.jpg', 
+            #                                                         'rb') as photo_i,  open('quran.jpg', 'rb') as photo_q:
+            #     file_v = {'photo': photo}
+            #     file_i = {'photo': photo_i}
+            #     # file_i2 = {'photo': photo_i2}open('ислам2.jpg', 
+            #                                                                             # 'rb') as photo_i2,
+            #     file_q = {'photo': photo_q}
+            #     data = {'chat_id': tg_id}
+                        
+            #     response = requests.post(method, data=data, files=file_v) 
+            #     response_i = requests.post(method, data=data, files=file_i) 
+            #     response_q = requests.post(method, data=data, files=file_q)

@@ -28,7 +28,7 @@ jobs:
         # run: docker compose up -d --build
     - name: django
       run: |
-        docker compose run --rm  practic python manage.py makemigrations 
+        docker compose run --rm  practic python manage.py makemigrations general
     - name: migrate
       run: |
         docker compose run --rm  practic python manage.py migrate
