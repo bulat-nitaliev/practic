@@ -28,13 +28,7 @@ jobs:
         # run: docker compose up -d --build
     - name: django
       run: |
-        docker compose run --rm  practic python manage.py makemigrations general
-    - name: migrate
-      run: |
-        docker compose run --rm  practic python manage.py migrate
-    - name: test django
-      run: |
-        docker compose run --rm  practic python manage.py test
+        docker compose run --rm  practic python manage.py makemigrations general && python manage.py migrate && python manage.py test
 
     - name: Stop containers
       if: always()
