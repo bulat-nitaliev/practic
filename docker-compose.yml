@@ -28,9 +28,9 @@ services:
       - net
     container_name: certbot
 
-  db:
+  db_psql:
     image: postgres:14.6-alpine
-    container_name: db
+    container_name: db_psql
     networks: 
       - net
     volumes:
@@ -75,7 +75,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     depends_on:
-      - db
+      - db_psql
 
    
   redis:
@@ -106,23 +106,23 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
-  flower:
-    build:
-      context: ./practic
-    hostname: flower
-    ports:
-      - 5555:5555
-    networks: 
-      - net
-    container_name: flower
-    entrypoint: celery
-    command: -A celery_app.app flower --loglevel=info
-    volumes:
-      - flower_vol:/practic/practic
-    links:
-      - redis
-    depends_on:
-      - redis
+  # flower:
+  #   build:
+  #     context: ./practic
+  #   hostname: flower
+  #   ports:
+  #     - 5555:5555
+  #   networks: 
+  #     - net
+  #   container_name: flower
+  #   entrypoint: celery
+  #   command: -A celery_app.app flower --loglevel=info
+  #   volumes:
+  #     - flower_vol:/practic/practic
+  #   links:
+  #     - redis
+  #   depends_on:
+  #     - redis
 
   scheduler:
     build:
@@ -144,7 +144,7 @@ services:
 volumes:
   static_vol:
   worker_vol:
-  flower_vol:
+  # flower_vol:
   scheduler_vol:
 
 networks:
