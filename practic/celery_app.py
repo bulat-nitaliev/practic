@@ -26,7 +26,7 @@ app.conf.beat_schedule = {
     },
     'send-spam3': {
         'task' : 'general.tasks.send_graf',
-        'schedule': crontab(minute=0, hour=20)
+        'schedule': crontab(day_of_week='sun')
     },
 }
 #day_of_week='sun'
