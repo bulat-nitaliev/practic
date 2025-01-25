@@ -41,9 +41,9 @@ services:
       - POSTGRES_PASSWORD=postgres
       
 
-  bot:
+  bot_tg:
     build: ./bot
-    container_name: bot
+    container_name: bot_tg
     networks: 
       - net
     environment:
